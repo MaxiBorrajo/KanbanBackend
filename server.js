@@ -4,6 +4,8 @@ import "dotenv/config";
 
 import express from "express";
 
+import cookieParser from "cookie-parser";
+
 import session from "express-session";
 
 import MongoDBStore from "connect-mongodb-session";
@@ -55,6 +57,8 @@ const store = new MongoDBStoreSession({
 store.on("error", function (error) {
   console.log(error);
 });
+
+app.use(cookieParser());
 
 app.use(
   session({
