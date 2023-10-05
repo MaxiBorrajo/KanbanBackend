@@ -2,8 +2,7 @@ import CustomError from "../utils/customError.js";
 
 function authMiddleware(req, res, next) {
   try {
-    console.log(req.session)
-    console.log(req.isAuthenticated())
+    console.log(req.cookies)
     if (req.isAuthenticated()) {
       next();
     } else {
