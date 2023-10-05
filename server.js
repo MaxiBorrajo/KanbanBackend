@@ -64,8 +64,7 @@ app.use(
     store: store,
     cookie: {
       secure:true,
-      sameSite: "none",
-      domain:".vercel.app"
+      sameSite: "lax",
     },
   })
 );
