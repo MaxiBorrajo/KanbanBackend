@@ -69,6 +69,7 @@ app.use(
       secure: true,
       sameSite: "none",
     },
+    store:store
   })
 );
 
