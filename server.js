@@ -65,7 +65,7 @@ app.use(
     cookie: {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: false,
-      sameSite: "none",
+      sameSite: "None",
     },
     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   })
