@@ -6,10 +6,8 @@ import { isLesserOrEqualThan } from "../utils/utilsFunctions.js";
 import CustomError from "../utils/customError.js";
 
 class UserManager {
-  //Constructor
   constructor() {}
 
-  //Methods
   async createUser(_user) {
     try {
       const foundUser = await user.findOne({
@@ -21,6 +19,11 @@ class UserManager {
       }
 
       const createdUser = await user.create(_user);
+
+      await tableManager.createTable({
+        tableName: "New table",
+        idUser: createdUser._doc._id,
+      });
 
       delete createdUser._doc.password;
 
@@ -77,6 +80,7 @@ class UserManager {
   async deleteUserById(id) {
     try {
       await tableManager.deleteTablesByIdUser(id);
+      await taskManager.deleteTasksByIdUser(id);
 
       const deletedUser = await user.findByIdAndDelete(id);
 

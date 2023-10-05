@@ -9,6 +9,8 @@ import sendEmail from "../utils/sendEmail.js";
 
 import jwt from "jsonwebtoken";
 
+import { deleteImageInCloud } from "../middlewares/uploadsImageMiddleware.js";
+
 //Methods
 async function register(req, res, next) {
   try {
@@ -65,7 +67,7 @@ async function forgotPassword(req, res, next) {
 
     const resetPasswordToken = foundUser.getResetPasswordToken(foundUser._id);
 
-    const resetPasswordUrl = `${process.env.URL_FRONTEND}/reset_password/${resetPasswordToken}`; //link al front
+    const resetPasswordUrl = `${process.env.URL_FRONTEND}/resetPassword?token=${resetPasswordToken}`; //link al front
 
     //esto despues va a ser un archivo html lindo
     const resetPasswordEmailBody = `
@@ -140,8 +142,8 @@ async function resetPassword(req, res, next) {
 
 function getActualUser(req, res, next) {
   try {
-    const user = {...req.user}
-  
+    const user = { ...req.user };
+
     delete user._doc.password;
 
     delete user._doc._id;
@@ -194,8 +196,9 @@ async function sendFeedback(req, res, next) {
 async function updateActualUser(req, res, next) {
   try {
     let user = { ...req.user._doc, ...req.body };
-
     if (existsImageUpload(req)) {
+      await deleteImageInCloud(req.user.publicId);
+
       const profilePhoto = {
         publicId: req.file.publicId,
         urlProfilePhoto: req.file.url,
@@ -222,7 +225,7 @@ async function updateActualUser(req, res, next) {
 }
 
 function existsImageUpload(req) {
-  return !!(req.file && req.file.url && req.file.publicId);
+  return Boolean(req.file && req.file.url && req.file.publicId);
 }
 
 export {

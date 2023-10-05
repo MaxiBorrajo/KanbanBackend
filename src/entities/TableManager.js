@@ -1,5 +1,5 @@
 import table from "../repositories/tableRepository.js";
-import taskManager from "../entities/TaskManager.js"
+import taskManager from "../entities/TaskManager.js";
 import { isLesserOrEqualThan } from "../utils/utilsFunctions.js";
 import CustomError from "../utils/customError.js";
 
@@ -11,7 +11,7 @@ class TableManager {
   async createTable(_table) {
     try {
       const createdTable = await table.create(_table);
-      
+
       return createdTable;
     } catch (error) {
       throw error;
@@ -77,9 +77,7 @@ class TableManager {
 
   async deleteTablesByIdUser(idUser) {
     try {
-      await taskManager.deleteTasksByIdUser(idUser);
-      
-      const deletedTables = await table.deleteMany({idUser: idUser });
+      const deletedTables = await table.deleteMany({ idUser: idUser });
 
       return deletedTables;
     } catch (error) {

@@ -26,7 +26,7 @@ async function getTables(req, res, next) {
   try {
     const foundTables = await tableManager.getTablesByIdUser(req.user._id);
 
-    return returnResponse(res, 201, foundTables, true);
+    return returnResponse(res, 200, foundTables, true);
   } catch (error) {
     next(error);
   }
