@@ -61,11 +61,7 @@ app.use(
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
-    store: store,
-    cookie: {
-      secure:true,
-      sameSite: "lax",
-    },
+    store: store
   })
 );
 
