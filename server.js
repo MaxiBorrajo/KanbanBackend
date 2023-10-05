@@ -6,6 +6,8 @@ import express from "express";
 
 import session from "express-session";
 
+import MongoDBStore from "connect-mongodb-session";
+
 import morgan from "morgan";
 
 import cors from "cors";
@@ -24,7 +26,7 @@ import userRoute from "./src/routes/userRoute.js";
 
 import tableRoute from "./src/routes/tableRoute.js";
 
-import taskRoute from "./src/routes/taskRoute.js"
+import taskRoute from "./src/routes/taskRoute.js";
 
 //Dependencies
 
@@ -43,11 +45,23 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(morgan("dev"));
 
+const MongoDBStoreSession = MongoDBStore(session);
+
+const store = new MongoDBStoreSession({
+  uri: process.env.DB_URI,
+  collection: "mySessions",
+});
+
+store.on('error', function(error) {
+  console.log(error);
+});
+
 app.use(
   session({
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
+    store: store,
   })
 );
 
