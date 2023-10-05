@@ -34,6 +34,8 @@ import taskRoute from "./src/routes/taskRoute.js";
 
 const app = express();
 
+app.use(cookieParser());
+
 app.use(
   cors({
     origin: true,
@@ -58,13 +60,15 @@ store.on("error", function (error) {
   console.log(error);
 });
 
-app.use(cookieParser());
-
 app.use(
   session({
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      secure: true,
+      sameSite: "none",
+    },
   })
 );
 
