@@ -32,7 +32,7 @@ import {
   deleteActualUser,
   sendFeedback,
   updateActualUser,
-  googleRedirect
+  googleRedirect,
 } from "../controllers/userController.js";
 
 router.post(
@@ -45,9 +45,9 @@ router.post(
 
 router.post(
   "/credentials",
-  passport.authenticate("local"),
   bodyMustContain(["username", "password"]),
   meetsWithPasswordRequirements,
+  passport.authenticate("local"),
   getActualUser
 );
 
@@ -99,6 +99,11 @@ router.put(
 
 router.delete("/", authMiddleware, deleteActualUser);
 
-router.post("/feedback", bodyMustContain(["comment"]), authMiddleware, sendFeedback);
+router.post(
+  "/feedback",
+  bodyMustContain(["comment"]),
+  authMiddleware,
+  sendFeedback
+);
 
 export default router;
