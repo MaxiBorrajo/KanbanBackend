@@ -65,7 +65,12 @@ app.use(
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
-    store:store
+    store: store,
+    cookie: {
+      secure: true,
+      sameSite: "none",
+      domain: 'maximilianoborrajoprojects.com.ar'
+    },
   })
 );
 
