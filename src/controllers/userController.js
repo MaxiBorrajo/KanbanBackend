@@ -26,6 +26,7 @@ async function register(req, res, next) {
 
 async function googleRedirect(req, res, next) {
   try {
+    console.log(req.user)
     const auth = {
       idUser: req.user._id,
       token: authManager.generateToken(req.user._id),
