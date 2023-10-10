@@ -105,9 +105,8 @@ class UserManager {
         throw new CustomError("User not found", 400);
       }
 
-      if (foundUser.publicId !== default_bx6tka) {
         await deleteImageInCloud(foundUser.publicId);
-      }
+   
     } catch (error) {
       throw error;
     }

@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema(
     },
     publicId: {
       type: String,
-      default: "default_bx6tka",
+      default: "default",
     },
     urlProfilePhoto: {
       type: String,
