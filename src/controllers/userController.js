@@ -35,9 +35,9 @@ async function googleRedirect(req, res, next) {
 
     await authManager.authorize(auth);
 
-    res.set("authorizationToken", auth.token);
-
-    res.redirect(`${process.env.URL_FRONTEND}?googleRedirect=true`);
+    res.redirect(
+      `${process.env.URL_FRONTEND}?googleRedirect=true&token=${auth.token}`
+    );
   } catch (error) {
     next(error);
   }
