@@ -226,10 +226,8 @@ async function sendFeedback(req, res, next) {
 
 async function updateActualUser(req, res, next) {
   try {
-    console.log(req.user)
-    console.log(req.body)
     let user = { ...req.user._doc, ...req.body };
-    console.log(user)
+
     if (existsImageUpload(req)) {
       await deleteImageInCloud(req.user.publicId);
 

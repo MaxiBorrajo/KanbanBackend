@@ -2,9 +2,9 @@ import user from "../repositories/userRepository.js";
 import feedback from "../repositories/feedbackRepository.js";
 import tableManager from "../entities/TableManager.js";
 import taskManager from "../entities/TaskManager.js";
-import authManager from "../entities/AuthManager.js";
 import { isLesserOrEqualThan } from "../utils/utilsFunctions.js";
 import CustomError from "../utils/customError.js";
+import { deleteImageInCloud } from "../middlewares/uploadsImageMiddleware.js";
 
 class UserManager {
   constructor() {}
@@ -85,11 +85,29 @@ class UserManager {
 
       const deletedUser = await user.findByIdAndDelete(id);
 
+      await this.deleteImageOfUser(id);
+
       if (deletedUser.deletedCount <= 0) {
         throw new CustomError(`User not deleted`, 500);
       }
 
       return deletedUser;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteImageOfUser(id) {
+    try {
+      const foundUser = await this.getUserById(id);
+
+      if (!foundUser) {
+        throw new CustomError("User not found", 400);
+      }
+
+      if (foundUser.publicId !== default_bx6tka) {
+        await deleteImageInCloud(foundUser.publicId);
+      }
     } catch (error) {
       throw error;
     }
