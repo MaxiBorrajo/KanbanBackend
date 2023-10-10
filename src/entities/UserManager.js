@@ -83,9 +83,9 @@ class UserManager {
       await tableManager.deleteTablesByIdUser(id);
       await taskManager.deleteTasksByIdUser(id);
 
-      const deletedUser = await user.findByIdAndDelete(id);
-
       await this.deleteImageOfUser(id);
+
+      const deletedUser = await user.findByIdAndDelete(id);
 
       if (deletedUser.deletedCount <= 0) {
         throw new CustomError(`User not deleted`, 500);
