@@ -26,10 +26,11 @@ async function register(req, res, next) {
 
 async function googleRedirect(req, res, next) {
   try {
-    console.log(req.user)
+    const foundUser = await userManager.getUserByEmail(req.user.email);
+
     const auth = {
-      idUser: req.user._id,
-      token: authManager.generateToken(req.user._id),
+      idUser: foundUser._id,
+      token: authManager.generateToken(foundUser._id),
     };
 
     await authManager.authorize(auth);
@@ -165,12 +166,7 @@ async function login(req, res, next) {
 
     res.set("authorizationToken", auth.token);
 
-    return returnResponse(
-      res,
-      200,
-      authenticatedUser,
-      true
-    );
+    return returnResponse(res, 200, authenticatedUser, true);
   } catch (error) {
     next(error);
   }
