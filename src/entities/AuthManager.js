@@ -30,20 +30,6 @@ class AuthManager {
     }
   }
 
-  async deleteAuthsByIdUser(id) {
-    try {
-      const deletedAuths = await auth.deleteMany({ idUser: id });
-
-      if (deletedAuths.deletedCount <= 0) {
-        throw new CustomError(`Auths not deleted`, 500);
-      }
-
-      return deletedAuths;
-    } catch (error) {
-      throw error;
-    }
-  }
-
   async authorize(_auth) {
     try {
       let authorization = await auth.findOneAndUpdate(

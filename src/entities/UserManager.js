@@ -82,7 +82,6 @@ class UserManager {
     try {
       await tableManager.deleteTablesByIdUser(id);
       await taskManager.deleteTasksByIdUser(id);
-      await authManager.deleteAuthsByIdUser(id)
 
       const deletedUser = await user.findByIdAndDelete(id);
 
