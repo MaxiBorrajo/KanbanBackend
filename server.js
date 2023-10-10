@@ -40,6 +40,7 @@ app.use(
   cors({
     origin: true,
     credentials: true,
+    exposedHeaders: 'authorizationToken'
   })
 );
 
@@ -65,12 +66,7 @@ app.use(
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
-    store: store,
-    cookie: {
-      secure: true,
-      sameSite: "none",
-      domain: 'maximilianoborrajoprojects.com.ar'
-    },
+    store: store
   })
 );
 

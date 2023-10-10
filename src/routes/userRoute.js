@@ -19,8 +19,6 @@ import {
 
 const router = express.Router();
 
-import "../middlewares/passport-config.js";
-
 import "../middlewares/authWithGoogle.js";
 
 import {
@@ -33,6 +31,7 @@ import {
   sendFeedback,
   updateActualUser,
   googleRedirect,
+  login
 } from "../controllers/userController.js";
 
 router.post(
@@ -47,8 +46,7 @@ router.post(
   "/credentials",
   bodyMustContain(["username", "password"]),
   meetsWithPasswordRequirements,
-  passport.authenticate("local"),
-  getActualUser
+  login
 );
 
 /**

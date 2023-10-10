@@ -2,6 +2,7 @@ import user from "../repositories/userRepository.js";
 import feedback from "../repositories/feedbackRepository.js";
 import tableManager from "../entities/TableManager.js";
 import taskManager from "../entities/TaskManager.js";
+import authManager from "../entities/AuthManager.js";
 import { isLesserOrEqualThan } from "../utils/utilsFunctions.js";
 import CustomError from "../utils/customError.js";
 
@@ -81,6 +82,7 @@ class UserManager {
     try {
       await tableManager.deleteTablesByIdUser(id);
       await taskManager.deleteTasksByIdUser(id);
+      await authManager.deleteAuthsByIdUser(id)
 
       const deletedUser = await user.findByIdAndDelete(id);
 
@@ -117,8 +119,6 @@ class UserManager {
       }
 
       delete foundUser._doc.password;
-
-      delete foundUser._doc._id;
 
       delete foundUser._doc.updatedAt;
 

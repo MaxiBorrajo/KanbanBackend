@@ -1,6 +1,8 @@
 //Imports
 import userManager from "../entities/UserManager.js";
 
+import authManager from "../entities/AuthManager.js";
+
 import CustomError from "../utils/customError.js";
 
 import { returnResponse } from "../utils/utilsFunctions.js";
@@ -24,6 +26,15 @@ async function register(req, res, next) {
 
 async function googleRedirect(req, res, next) {
   try {
+    const auth = {
+      idUser: req.user._id,
+      token: authManager.generateToken(req.user._id),
+    };
+
+    await authManager.authorize(auth);
+
+    res.set("authorizationToken", auth.token);
+
     res.redirect(`${process.env.URL_FRONTEND}?googleRedirect=true`);
   } catch (error) {
     next(error);
@@ -32,15 +43,10 @@ async function googleRedirect(req, res, next) {
 
 async function logout(req, res, next) {
   try {
-    req.logOut((err) => {
-      if (err) {
-        return next(err);
-      }
+    await authManager.deleteAuthByIdUser(req.user._id);
 
-      return returnResponse(res, 200, { message: "You have log out" }, true);
-    });
+    return returnResponse(res, 200, { message: "You have log out" }, true);
   } catch (error) {
-    console.log(error);
     next(error);
   }
 }
@@ -140,19 +146,44 @@ async function resetPassword(req, res, next) {
   }
 }
 
-function getActualUser(req, res, next) {
+async function login(req, res, next) {
   try {
-    const user = { ...req.user };
+    const { username, password } = req.body;
 
-    delete user._doc.password;
+    const authenticatedUser = await userManager.authenticateUser(
+      username,
+      password
+    );
 
-    delete user._doc._id;
+    const auth = {
+      idUser: authenticatedUser._doc._id,
+      token: authManager.generateToken(authenticatedUser._doc._id),
+    };
 
-    delete user._doc.updatedAt;
+    await authManager.authorize(auth);
 
-    delete user._doc.createdAt;
+    res.set("authorizationToken", auth.token);
 
-    return returnResponse(res, 200, user._doc, true);
+    return returnResponse(
+      res,
+      200,
+      authenticatedUser,
+      true
+    );
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getActualUser(req, res, next) {
+  try {
+    const foundUser = await userManager.getUserById(req.user._id);
+
+    if (!foundUser) {
+      throw new CustomError("User not found", 500);
+    }
+
+    return returnResponse(res, 200, foundUser, true);
   } catch (error) {
     next(error);
   }
@@ -195,7 +226,7 @@ async function sendFeedback(req, res, next) {
 
 async function updateActualUser(req, res, next) {
   try {
-    let user = { ...req.user._doc, ...req.body };
+    let user = { ...req.user, ...req.body };
     if (existsImageUpload(req)) {
       await deleteImageInCloud(req.user.publicId);
 
@@ -238,4 +269,5 @@ export {
   sendFeedback,
   updateActualUser,
   googleRedirect,
+  login,
 };
